@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝐌𝐕𝐒 𝐂𝐎𝐌𝐌𝐔𝐍𝐈𝐓𝐘💋 - Step Maintain Calculator</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #05070b;
+            color: #ffffff;
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Flying Golden Birds Background Canvas */
+        #birdCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Top Left Neon Green Live Step Badge */
+        .live-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.18);
+            border: 1.5px solid #10b981;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            z-index: 10;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #22c55e;
+            animation: liveBlink 1.2s infinite ease-in-out;
+        }
+        @keyframes liveBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.85); }
+        }
+
+        .app-card {
+            width: 100%;
+            max-width: 480px;
+            background: linear-gradient(145deg, rgba(13, 19, 33, 0.96), rgba(25, 33, 53, 0.96));
+            backdrop-filter: blur(12px);
+            border-radius: 22px;
+            padding: 25px 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.3);
+            border: 2px solid #d4af37;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 6px;
+        }
+        .lang-btn {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .lang-btn.active {
+            background: #d4af37;
+            color: #000;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        /* Unique CSS Logo Frame */
+        .logo-wrapper {
+            position: relative;
+            width: 126px;
+            height: 126px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-ring {
+            position: absolute;
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd700, #ff0055, #00f0ff, #10b981, #ffd700);
+            background-size: 400% 400%;
+            animation: ringSpin 3.5s infinite linear;
+            z-index: 1;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+        }
+        @keyframes ringSpin {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .logo-box {
+            width: 118px;
+            height: 118px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #1e293b, #080c14);
+            position: relative;
+            z-index: 2;
+            border: 3px solid #05070b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .logo-text-main {
+            font-size: 26px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #ffd700, #ffffff, #ff007f, #ffd700);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 3.5s infinite linear;
+            letter-spacing: 1px;
+        }
+        .logo-text-sub {
+            font-size: 9px;
+            color: #00f0ff;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Brand Name */
+        .brand-name {
+            font-size: 25px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ffd700, #ffffff, #00f0ff, #ff007f, #ffd700);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 3.5s infinite linear;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        @keyframes textShimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .kiss-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .kiss-emoji {
+            display: inline-block;
+            animation: kissPulse 1.2s infinite ease-in-out;
+            cursor: pointer;
+            -webkit-text-fill-color: initial;
+        }
+        @keyframes kissPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.4) rotate(-12deg); filter: drop-shadow(0 0 12px #ff0055); }
+        }
+        .floating-heart {
+            position: absolute;
+            font-size: 15px;
+            color: #ff0055;
+            pointer-events: none;
+            animation: floatAndFade 2s forwards linear;
+            z-index: 20;
+        }
+        @keyframes floatAndFade {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.8); }
+            100% { opacity: 0; transform: translate(calc(var(--rand-x) * 1px), -70px) scale(1.5); }
+        }
+
+        .sub-title {
+            font-size: 13px;
+            color: #38bdf8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* User Counter */
+        .user-counter-box {
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px dashed #d4af37;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .animated-users-icon {
+            color: #ffd700;
+            font-size: 18px;
+            animation: iconPulse 2s infinite ease-in-out;
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px #ffd700); }
+            50% { transform: scale(1.25); filter: drop-shadow(0 0 12px #00f0ff); }
+        }
+        .user-count-text {
+            font-size: 13px;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+        .user-count-text span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Telegram Button */
+        .tg-btn-container {
+            margin-bottom: 14px;
+        }
+        .tg-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0088cc, #00f0ff, #ff007f, #0088cc);
+            background-size: 300% 300%;
+            animation: tgShimmer 3s infinite ease-in-out;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0, 136, 204, 0.6);
+            transition: all 0.3s ease;
+        }
+        @keyframes tgShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .tg-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(0, 240, 255, 0.8);
+        }
+
+        .profit-desc-box {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(212, 175, 55, 0.15));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            color: #e2e8f0;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .notice-box {
+            background: rgba(34, 197, 94, 0.12);
+            border-left: 4px solid #22c55e;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 13px;
+            color: #4ade80;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            background: #05070b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Main Action Button (Yellow) */
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+        .action-btn:hover {
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Output Results */
+        .result-container {
+            margin-top: 25px;
+            display: none;
+        }
+        .table-card {
+            background: #0b1326;
+            border-radius: 12px;
+            padding: 15px 10px;
+            border: 1px solid #334155;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 13px;
+        }
+        th {
+            background: #1e293b;
+            color: #ffd700;
+            padding: 10px 4px;
+            border-bottom: 1px solid #334155;
+        }
+        td {
+            padding: 10px 4px;
+            border-bottom: 1px solid #1e293b;
+            color: #cbd5e1;
+        }
+        .loss-text {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .return-text {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        /* Action Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .util-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn-copy {
+            background: #3b82f6;
+            color: #fff;
+        }
+        .btn-download {
+            background: #10b981;
+            color: #fff;
+        }
+        .util-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 12px;
+            background: linear-gradient(90deg, #ffd700, #ff007f, #00f0ff, #ffd700);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: footerGlow 3s infinite linear;
+            font-weight: 600;
+        }
+        @keyframes footerGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="birdCanvas"></canvas>
+
+<div class="app-card">
+    
+    <!-- Top Left Live Badge -->
+    <div class="live-badge">
+        <div class="live-dot"></div>
+        LIVE STEP
+    </div>
+
+    <div class="lang-switcher">
+        <button class="lang-btn active" id="btnBn" onclick="setLanguage('bn')">বাংলা</button>
+        <button class="lang-btn" id="btnEn" onclick="setLanguage('en')">English</button>
+    </div>
+
+    <div class="header">
+        <div class="logo-wrapper">
+            <div class="logo-ring"></div>
+            <div class="logo-box">
+                <div class="logo-text-main">MVS</div>
+                <div class="logo-text-sub">COMMUNITY</div>
+            </div>
+        </div>
+        <div class="brand-name">
+            𝐌𝐕𝐒 𝐂𝐎𝐌𝐌𝐔𝐍𝐈𝐓𝐘
+            <span class="kiss-wrapper">
+                <span class="kiss-emoji" id="kissBtn">💋</span>
+            </span>
+        </div>
+        <div class="sub-title" id="txtSubTitle">Official Step Maintain Calculator</div>
+    </div>
+
+    <!-- Active User Counter (Increments by 1 every 2 seconds automatically) -->
+    <div class="user-counter-box">
+        <i class="fa-solid fa-users animated-users-icon"></i>
+        <div class="user-count-text">
+            <span id="txtUserPrefix">বর্তমানে</span> <span id="userCount">১,০০,৫২০</span>+ <span id="txtUserSuffix">মানুষ আমাদের এই স্টেপ অ্যাপ ব্যবহার করছেন।</span>
+        </div>
+    </div>
+
+    <!-- Telegram Channel Link Button -->
+    <div class="tg-btn-container">
+        <a href="https://t.me/mvs_community" target="_blank" class="tg-btn">
+            <i class="fa-brands fa-telegram"></i>
+            <span id="txtTgBtn">টেলিগ্রাম চ্যানেলে জয়েন করুন</span>
+        </a>
+    </div>
+
+    <div class="profit-desc-box" id="txtProfitDesc">
+        ✨ <b>আমাদের টেলিগ্রাম চ্যানেলে জয়েন করে প্রতিদিন নিশ্চিত প্রফিট করুন!</b> সেরা সিগন্যাল একিউরেসি ও ট্রেডিং গাইড পেতে এখনই টেলিগ্রামের ওপর চাপ দিন।
+    </div>
+
+    <div class="notice-box" id="txtNotice">
+        💡 <b>পরামর্শ:</b> অবশ্যই স্টেপ মেইনটেইন করে ট্রেড নিন, আপনার প্রফিট নিশ্চিত থাকবে!
+    </div>
+
+    <!-- Inputs -->
+    <div class="form-group">
+        <label for="totalAmount" id="lblAmount">আপনার মূলধন/ব্যালেন্স (টাকা):</label>
+        <input type="number" id="totalAmount" placeholder="যেমন: 500 বা 1000">
+    </div>
+
+    <div class="form-group">
+        <label for="stepCount" id="lblSteps">আপনি কত স্টেপ করতে চান? (অনলিমিটেড):</label>
+        <input type="number" id="stepCount" placeholder="যেমন: 5 বা 7">
+    </div>
+
+    <!-- Main Yellow Button -->
+    <button class="action-btn" id="txtCalcBtn" type="button" onclick="calculateSteps()">নেক্সট (স্টেপ চার্ট তৈরি করুন)</button>
+
+    <!-- Results Table Box -->
+    <div class="result-container" id="resultBox">
+        <div class="table-card">
+            <div style="text-align: center; margin-bottom: 12px; color: #ffd700; font-size: 15px; font-weight: bold;">
+                𝐌𝐕𝐒 𝐂𝐎𝐌𝐌𝐔𝐍𝐈𝐓𝐘💋 Step Plan
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="thStep">স্টেপ</th>
+                            <th id="thBet">বাজি ধরা</th>
+                            <th id="thLoss">মোট লস</th>
+                            <th id="thReturn">জিতলে পাবে</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stepRows">
+                        <!-- Dynamic Steps -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Copy and Download Buttons -->
+        <div class="btn-group">
+            <button class="util-btn btn-copy" type="button" onclick="copyStepText()">
+                <i class="fa-regular fa-copy"></i> <span id="txtCopyBtn">কপি করুন</span>
+            </button>
+            <button class="util-btn btn-download" type="button" onclick="downloadAsTextFile()">
+                <i class="fa-solid fa-file-arrow-down"></i> <span id="txtDownloadBtn">হিসাব ডাউনলোড</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        © 𝐌𝐕𝐒 𝐂𝐎𝐌𝐌𝐔𝐍𝐈𝐓𝐘💋 | All Rights Reserved
+    </div>
+
+</div>
+
+<script>
+    const langData = {
+        bn: {
+            subTitle: "Official Step Maintain Calculator",
+            userPrefix: "বর্তমানে",
+            userSuffix: "মানুষ আমাদের এই স্টেপ অ্যাপ ব্যবহার করছেন।",
+            tgBtn: "টেলিগ্রাম চ্যানেলে জয়েন করুন",
+            profitDesc: "✨ <b>আমাদের টেলিগ্রাম চ্যানেলে জয়েন করে প্রতিদিন নিশ্চিত প্রফিট করুন!</b> সেরা সিগন্যাল একিউরেসি ও ট্রেডিং গাইড পেতে এখনই টেলিগ্রামের ওপর চাপ দিন।",
+            notice: "💡 <b>পরামর্শ:</b> অবশ্যই স্টেপ মেইনটেইন করে ট্রেড নিন, আপনার প্রফিট নিশ্চিত থাকবে!",
+            lblAmount: "আপনার মূলধন/ব্যালেন্স (টাকা):",
+            lblSteps: "আপনি কত স্টেপ করতে চান? (অনলিমিটেড):",
+            calcBtn: "নেক্সট (স্টেপ চার্ট তৈরি করুন)",
+            thStep: "স্টেপ",
+            thBet: "বাজি ধরা",
+            thLoss: "মোট লস",
+            thReturn: "জিতলে পাবে",
+            copyBtn: "কপি করুন",
+            downloadBtn: "হিসাব ডাউনলোড",
+            alertErr: "অনুগ্রহ করে সঠিক ব্যালেন্স এবং স্টেপ সংখ্যা লিখুন!",
+            copySuccess: "স্টেপ হিসাব সফলভাবে কপি হয়েছে!",
+            downloadSuccess: "হিসাবের টেক্সট ফাইল ডাউনলোড সম্পন্ন হয়েছে!"
+        },
+        en: {
+            subTitle: "Official Step Maintain Calculator",
+            userPrefix: "Currently",
+            userSuffix: "people are using this step calculator app.",
+            tgBtn: "Join Telegram Channel",
+            profitDesc: "✨ <b>Join our Telegram channel and make guaranteed profits daily!</b> Tap Telegram button now for high accuracy signals.",
+            notice: "💡 <b>Tip:</b> Always maintain steps while trading to secure your profit!",
+            lblAmount: "Your Total Balance / Amount:",
+            lblSteps: "How many steps do you want? (Unlimited):",
+            calcBtn: "Next (Generate Step Plan)",
+            thStep: "Step",
+            thBet: "Bet Amount",
+            thLoss: "Total Loss",
+            thReturn: "Return Amount",
+            copyBtn: "Copy Text",
+            downloadBtn: "Download File",
+            alertErr: "Please enter valid 
