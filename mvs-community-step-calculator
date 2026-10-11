@@ -1,1 +1,300 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVS COMMUNITY - Color Trading Step Maintain Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background: #070913;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        /* Animated RGB Gradient Text */
+        .animated-gradient-text {
+            background: linear-gradient(90deg, #ff007a, #00f0ff, #7000ff, #00ff66, #ff007a);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Spinning Outer Rings */
+        .spin-ring {
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Pulsing Glow */
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2); }
+            100% { box-shadow: 0 0 35px rgba(255, 0, 122, 0.8), inset 0 0 25px rgba(255, 0, 122, 0.5); }
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(18, 22, 41, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0e1b; }
+        ::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-6 relative">
+
+    <!-- Top Bar: Live Step Badge & Auto User Counter -->
+    <div class="w-full max-w-md flex justify-between items-center mb-6 px-4 py-2.5 rounded-full glass-card border-emerald-500/30">
+        <div class="flex items-center space-x-2">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <span class="text-xs font-extrabold text-emerald-400 tracking-wider uppercase orbitron">LIVE STEP</span>
+        </div>
+        <div class="text-xs text-gray-300 font-medium">
+            সক্রিয় ইউজার: <span id="userCounter" class="text-cyan-400 font-bold orbitron">১,০০,২৪৫</span> জন
+        </div>
+    </div>
+
+    <!-- Center Logo Emblem with Animated Glow Rings -->
+    <div class="relative flex items-center justify-center my-4">
+        <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full border-2 border-dashed border-cyan-400/60 spin-ring absolute"></div>
+        <div class="w-38 h-38 sm:w-44 sm:h-44 rounded-full border-2 border-dashed border-pink-500/60 absolute" style="animation: spin 7s linear infinite reverse;"></div>
+        
+        <!-- Center Glossy MVS Emblem -->
+        <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex flex-col items-center justify-center z-10 pulse-glow border-2 border-cyan-400 cursor-pointer transition transform hover:scale-105">
+            <svg class="w-16 h-12 text-cyan-400 drop-shadow-[0_0_10px_rgba(0,240,255,0.8)]" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 50L30 10L50 50L30 38L10 50Z" fill="url(#grad1)"/>
+                <path d="M50 50L70 10L90 50L70 38L50 50Z" fill="url(#grad2)"/>
+                <path d="M85 15C95 15 105 22 105 32C105 45 85 48 105 52" stroke="#00f0ff" stroke-width="6" stroke-linecap="round"/>
+                <defs>
+                    <linearGradient id="grad1" x1="10" y1="10" x2="50" y2="50">
+                        <stop offset="0%" stop-color="#ff007a"/>
+                        <stop offset="100%" stop-color="#7000ff"/>
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="50" y1="10" x2="90" y2="50">
+                        <stop offset="0%" stop-color="#00f0ff"/>
+                        <stop offset="100%" stop-color="#00ff66"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span class="orbitron text-lg font-black text-white tracking-widest mt-1 drop-shadow-[0_0_8px_rgba(255,0,122,0.8)]">MVS</span>
+        </div>
+    </div>
+
+    <!-- Main Title Header -->
+    <div class="text-center mt-2 mb-6">
+        <h1 class="text-2xl sm:text-3xl font-extrabold orbitron animated-gradient-text tracking-wide">
+            𝐌𝐕𝐒 𝐂𝐎𝐌𝐌𝐔𝐍𝐈𝐓𝐘
+        </h1>
+        <p class="text-xs sm:text-sm text-cyan-300 font-semibold tracking-wider mt-1">
+            কালার ট্রেডিং স্টেপ মেইনটেইন ক্যালকুলেটর
+        </p>
+    </div>
+
+    <!-- Direct Telegram Channel Link Button -->
+    <a href="https://t.me/mvs_community" target="_blank" rel="noopener noreferrer" class="w-full max-w-md mb-6 block group">
+        <div class="w-full bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 hover:from-sky-500 hover:to-blue-600 p-[2px] rounded-2xl shadow-[0_0_20px_rgba(14,165,233,0.5)] transition duration-300 transform group-hover:scale-[1.02]">
+            <div class="bg-slate-950/90 group-hover:bg-slate-900/80 p-4 rounded-2xl flex items-center justify-between transition">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center shadow-lg group-hover:rotate-12 transition transform">
+                        <i class="fa-paper-plane text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-sm sm:text-base flex items-center gap-1">
+                            অফিশিয়াল টেলিগ্রাম চ্যানেল
+                            <i class="fa-solid fa-circle-check text-sky-400 text-xs"></i>
+                        </div>
+                        <div class="text-xs text-sky-300">চ্যানেলে জয়েন করতে এখানে ক্লিক করুন</div>
+                    </div>
+                </div>
+                <div class="bg-sky-500/20 text-sky-300 group-hover:bg-sky-500 group-hover:text-white p-2.5 rounded-xl transition">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+        </div>
+    </a>
+
+    <!-- Notice Copy Banner -->
+    <div class="w-full max-w-md bg-gradient-to-r from-pink-950/40 via-purple-950/40 to-slate-900/60 border border-pink-500/30 rounded-2xl p-4 mb-6 text-center shadow-lg">
+        <p class="text-xs sm:text-sm text-pink-200 leading-relaxed">
+            🔥 কালার ট্রেডিং এ প্রতিদিন নিয়মিত প্রফিট করতে আমাদের চ্যানেলে জয়েন করুন। 
+            <br>
+            <span class="text-yellow-300 font-bold mt-1 inline-block">
+                ⚡ মনে রাখবেন: অবশ্যই আপনি যত স্টেপ ফলো করে খেলবেন, কখনো আপনার লস হবে না!
+            </span>
+        </p>
+    </div>
+
+    <!-- Step Maintain Inputs Form -->
+    <div class="w-full max-w-md glass-card rounded-3xl p-5 sm:p-6 mb-6 shadow-2xl relative border-cyan-500/30">
+        <h2 class="text-base sm:text-lg font-bold text-cyan-300 mb-4 flex items-center gap-2 border-b border-cyan-500/20 pb-2">
+            <i class="fa-solid fa-calculator text-pink-500"></i> স্টেপ হিসাব করুন
+        </h2>
+
+        <form id="calcForm" onsubmit="calculateSteps(event)">
+            <!-- Input 1: Balance Amount -->
+            <div class="mb-4">
+                <label class="block text-xs sm:text-sm font-semibold text-gray-200 mb-2">
+                    আপনার মোট ব্যালেন্স লিখুন (টাকা):
+                </label>
+                <div class="relative">
+                    <span class="absolute left-4 top-3.5 text-cyan-400 font-bold">৳</span>
+                    <input type="number" id="balanceInput" required min="1" step="any"
+                        placeholder="যেমন: 10, 20, 30, 50, 100, 1000..." 
+                        class="w-full bg-slate-900/90 border border-cyan-500/40 rounded-xl py-3 pl-9 pr-4 text-white text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition placeholder-gray-500">
+                </div>
+            </div>
+
+            <!-- Input 2: Step Count -->
+            <div class="mb-5">
+                <label class="block text-xs sm:text-sm font-semibold text-gray-200 mb-2">
+                    কয় স্টেপ বানাতে চান (সংখ্যা):
+                </label>
+                <div class="relative">
+                    <span class="absolute left-4 top-3.5 text-pink-400"><i class="fa-solid fa-layer-group"></i></span>
+                    <input type="number" id="stepsInput" required min="1" max="20" step="1"
+                        placeholder="যেমন: 1, 2, 3, 4, 5, 10..." 
+                        class="w-full bg-slate-900/90 border border-pink-500/40 rounded-xl py-3 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-400 transition placeholder-gray-500">
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="submit" 
+                class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-pink-500 hover:from-pink-500 hover:to-cyan-500 text-white font-extrabold text-sm sm:text-base shadow-[0_0_15px_rgba(0,240,255,0.4)] hover:shadow-[0_0_25px_rgba(255,0,122,0.6)] transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
+                <span>স্টেপ মেইনটেইন চার্ট তৈরি করুন</span>
+                <i class="fa-solid fa-bolt"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Output Table (3 Columns) -->
+    <div id="resultCard" class="w-full max-w-md glass-card rounded-3xl p-4 sm:p-5 shadow-2xl border-emerald-500/30 hidden">
+        <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-700">
+            <span class="text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line"></i> স্টেপ প্ল্যান সমীকরণ (১.৯৬x)
+            </span>
+            <span id="summaryBadge" class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full font-semibold">
+                হিসাব প্রস্তুত
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+                <thead>
+                    <tr class="bg-slate-900/80 text-cyan-300 border-b border-cyan-500/20">
+                        <th class="py-2.5 px-2 font-bold text-center">স্টেপ নং</th>
+                        <th class="py-2.5 px-2 font-bold text-center">কত টাকা মারবেন</th>
+                        <th class="py-2.5 px-2 font-bold text-center">উইন হলে পাবেন (১.৯৬ গুণ)</th>
+                    </tr>
+                </thead>
+                <tbody id="stepsTableBody" class="divide-y divide-slate-800/60 text-center">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // Auto Increment Active Users Counter
+        let count = 100245;
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3) + 1;
+            const formatted = count.toLocaleString('bn-BD');
+            document.getElementById('userCounter').innerText = formatted;
+        }, 3000);
+
+        // Step Calculator Processing
+        function calculateSteps(event) {
+            event.preventDefault();
+
+            const balance = parseFloat(document.getElementById('balanceInput').value);
+            const totalSteps = parseInt(document.getElementById('stepsInput').value);
+
+            if (isNaN(balance) || isNaN(totalSteps) || balance <= 0 || totalSteps <= 0) {
+                alert('দয়া করে সঠিক ব্যালেন্স এবং স্টেপ সংখ্যা লিখুন।');
+                return;
+            }
+
+            const tableBody = document.getElementById('stepsTableBody');
+            tableBody.innerHTML = '';
+
+            let stakes = [];
+            let r = 2.0; 
+            let denominator = (Math.pow(r, totalSteps) - 1) / (r - 1);
+            let firstStake = balance / denominator;
+
+            let currentStake = firstStake;
+            let currentSum = 0;
+
+            for (let i = 1; i <= totalSteps; i++) {
+                let stakeToUse;
+                if (i === totalSteps) {
+                    stakeToUse = balance - currentSum;
+                } else {
+                    stakeToUse = currentStake;
+                }
+
+                if (stakeToUse < 1) stakeToUse = 1;
+
+                stakes.push(stakeToUse);
+                currentSum += stakeToUse;
+                currentStake *= r;
+            }
+
+            // Generate rows
+            stakes.forEach((stake, index) => {
+                const stepNum = index + 1;
+                const winReturn = stake * 1.96;
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/40 transition';
+
+                tr.innerHTML = `
+                    <td class="py-3 px-2 font-bold text-pink-400">
+                        স্টেপ ${stepNum.toLocaleString('bn-BD')}
+                    </td>
+                    <td class="py-3 px-2 font-extrabold text-cyan-300">
+                        ৳${stake.toFixed(2)}
+                    </td>
+                    <td class="py-3 px-2 font-black text-emerald-400">
+                        ৳${winReturn.toFixed(2)}
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // Reveal Result Card
+            const resultCard = document.getElementById('resultCard');
+            resultCard.classList.remove('hidden');
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
 
